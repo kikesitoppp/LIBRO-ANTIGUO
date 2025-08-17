@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mi Libro</title>
+  <title>Mi Libro Animado</title>
   <style>
     body {
       margin: 0;
@@ -14,7 +14,7 @@
       align-items: center;
       height: 100vh;
     }
-    #inicio, #libro, #final {
+    #inicio, #libro, #recuerda {
       display: none;
       text-align: center;
     }
@@ -39,40 +39,31 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-    .pagina {
-      width: 800px;
-      height: 500px;
-      background: url('paginas.png') no-repeat center center;
-      background-size: cover;
-      padding: 50px;
-      box-sizing: border-box;
       position: relative;
     }
-    .contenido {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .contenido img {
-      max-width: 200px;
-      border: 2px solid #a67c52;
-      border-radius: 8px;
-    }
-    .texto {
-      width: 65%;
-      font-size: 1.2em;
-      line-height: 1.6em;
-      text-align: justify;
+    #pagina-img {
+      max-width: 700px;
+      max-height: 90vh;
+      border: 5px solid #d4af37;
+      border-radius: 12px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
     }
     .navegacion {
-      margin-top: 20px;
+      position: absolute;
+      top: 50%;
+      width: 100%;
       display: flex;
       justify-content: space-between;
-      width: 200px;
+      transform: translateY(-50%);
     }
-    #final img {
-      max-width: 500px;
+    .navegacion button {
+      background: rgba(212,175,55,0.8);
+      font-size: 2em;
+      padding: 10px 20px;
+    }
+    #recuerda h2 {
+      font-size: 2.2em;
+      margin-bottom: 20px;
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
@@ -81,50 +72,48 @@
 
   <!-- Pantalla inicial -->
   <div id="inicio">
-    <h1>Hola gorda, hoy le vengo a contar una historia, ¿está listo?</h1>
+    <h1>Hola gorda, hoy le vengo a contar una historia, ¿está lista?</h1>
     <button onclick="iniciarLibro()">GO</button>
   </div>
 
   <!-- Libro -->
   <div id="libro">
-    <img id="portada" src="portada.png" alt="Portada del libro" style="max-width:500px; margin-bottom:20px;">
-
-    <div id="paginas-container">
-      <!-- Las páginas se insertan con JS -->
-    </div>
-
+    <img id="pagina-img" src="portada.png" alt="Página del libro">
     <div class="navegacion">
       <button onclick="anteriorPagina()">⬅</button>
       <button onclick="siguientePagina()">➡</button>
     </div>
   </div>
 
-  <!-- Final -->
-  <div id="final">
-    <img src="final.png" alt="Fin del libro">
+  <!-- Pantalla final con texto -->
+  <div id="recuerda">
+    <h2>Y recuerda que....</h2>
+    <button onclick="reproducirAudio()">Reprodúceme</button>
+    <audio id="miAudio" src="cancion.mp3"></audio>
   </div>
 
   <script>
     const inicio = document.getElementById('inicio');
     const libro = document.getElementById('libro');
-    const final = document.getElementById('final');
-    const paginasContainer = document.getElementById('paginas-container');
+    const recuerda = document.getElementById('recuerda');
+    const paginaImg = document.getElementById('pagina-img');
+    const miAudio = document.getElementById('miAudio');
 
-    // Texto e imagen de ejemplo (10 páginas)
+    // Páginas: portada + 8 páginas + final
     const paginas = [
-      { texto: "Érase una vez, en un pequeño pueblo lleno de magia...", img: "foto1.png" },
-      { texto: "Había una niña curiosa que siempre soñaba con aventuras.", img: "foto2.png" },
-      { texto: "Un día, encontró un libro antiguo que brillaba con luz propia.", img: "foto3.png" },
-      { texto: "Al abrirlo, las palabras parecían bailar frente a sus ojos.", img: "foto4.png" },
-      { texto: "Cada página revelaba un secreto escondido del mundo.", img: "foto5.png" },
-      { texto: "El tiempo dejó de existir mientras seguía leyendo.", img: "foto6.png" },
-      { texto: "Descubrió mapas, acertijos y viejas canciones olvidadas.", img: "foto7.png" },
-      { texto: "Entre letras y dibujos, halló la respuesta a sus preguntas.", img: "foto8.png" },
-      { texto: "El libro parecía escrito para ella, como un regalo secreto.", img: "foto9.png" },
-      { texto: "Y así, comenzó una historia que cambiaría su vida para siempre.", img: "foto10.png" }
+      "portada.png",
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "final.png"
     ];
 
-    let paginaActual = -1;
+    let paginaActual = 0;
 
     function iniciarLibro() {
       inicio.style.display = "none";
@@ -133,44 +122,29 @@
     }
 
     function mostrarPagina(num) {
-      paginasContainer.innerHTML = "";
-
       if (num >= paginas.length) {
         libro.style.display = "none";
-        final.style.display = "block";
+        recuerda.style.display = "block";
         return;
       }
-
-      const paginaDiv = document.createElement("div");
-      paginaDiv.className = "pagina";
-
-      const contenidoDiv = document.createElement("div");
-      contenidoDiv.className = "contenido";
-
-      const textoDiv = document.createElement("div");
-      textoDiv.className = "texto";
-      textoDiv.textContent = paginas[num].texto;
-
-      const img = document.createElement("img");
-      img.src = paginas[num].img;
-      img.alt = "Imagen de la página";
-
-      contenidoDiv.appendChild(textoDiv);
-      contenidoDiv.appendChild(img);
-      paginaDiv.appendChild(contenidoDiv);
-      paginasContainer.appendChild(paginaDiv);
-
+      paginaImg.src = paginas[num];
       paginaActual = num;
     }
 
     function siguientePagina() {
-      mostrarPagina(paginaActual + 1);
+      if (paginaActual < paginas.length) {
+        mostrarPagina(paginaActual + 1);
+      }
     }
 
     function anteriorPagina() {
       if (paginaActual > 0) {
         mostrarPagina(paginaActual - 1);
       }
+    }
+
+    function reproducirAudio() {
+      miAudio.play();
     }
 
     // Mostrar inicio al cargar
