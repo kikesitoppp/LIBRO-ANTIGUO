@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Libro</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cinzel Decorative', serif;
+      background: #f5f0e6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #inicio, #libro, #final {
+      display: none;
+      text-align: center;
+    }
+    #inicio h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 1.2em;
+      background: #d4af37;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Cinzel Decorative', serif;
+    }
+    button:hover {
+      background: #b8922a;
+    }
+    #libro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pagina {
+      width: 800px;
+      height: 500px;
+      background: url('paginas.png') no-repeat center center;
+      background-size: cover;
+      padding: 50px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .contenido {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .contenido img {
+      max-width: 200px;
+      border: 2px solid #a67c52;
+      border-radius: 8px;
+    }
+    .texto {
+      width: 65%;
+      font-size: 1.2em;
+      line-height: 1.6em;
+      text-align: justify;
+    }
+    .navegacion {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      width: 200px;
+    }
+    #final img {
+      max-width: 500px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Pantalla inicial -->
+  <div id="inicio">
+    <h1>Hola gorda, hoy le vengo a contar una historia, ¿está listo?</h1>
+    <button onclick="iniciarLibro()">GO</button>
+  </div>
+
+  <!-- Libro -->
+  <div id="libro">
+    <img id="portada" src="portada.png" alt="Portada del libro" style="max-width:500px; margin-bottom:20px;">
+
+    <div id="paginas-container">
+      <!-- Las páginas se insertan con JS -->
+    </div>
+
+    <div class="navegacion">
+      <button onclick="anteriorPagina()">⬅</button>
+      <button onclick="siguientePagina()">➡</button>
+    </div>
+  </div>
+
+  <!-- Final -->
+  <div id="final">
+    <img src="final.png" alt="Fin del libro">
+  </div>
+
+  <script>
+    const inicio = document.getElementById('inicio');
+    const libro = document.getElementById('libro');
+    const final = document.getElementById('final');
+    const paginasContainer = document.getElementById('paginas-container');
+
+    // Texto e imagen de ejemplo (10 páginas)
+    const paginas = [
+      { texto: "Érase una vez, en un pequeño pueblo lleno de magia...", img: "foto1.png" },
+      { texto: "Había una niña curiosa que siempre soñaba con aventuras.", img: "foto2.png" },
+      { texto: "Un día, encontró un libro antiguo que brillaba con luz propia.", img: "foto3.png" },
+      { texto: "Al abrirlo, las palabras parecían bailar frente a sus ojos.", img: "foto4.png" },
+      { texto: "Cada página revelaba un secreto escondido del mundo.", img: "foto5.png" },
+      { texto: "El tiempo dejó de existir mientras seguía leyendo.", img: "foto6.png" },
+      { texto: "Descubrió mapas, acertijos y viejas canciones olvidadas.", img: "foto7.png" },
+      { texto: "Entre letras y dibujos, halló la respuesta a sus preguntas.", img: "foto8.png" },
+      { texto: "El libro parecía escrito para ella, como un regalo secreto.", img: "foto9.png" },
+      { texto: "Y así, comenzó una historia que cambiaría su vida para siempre.", img: "foto10.png" }
+    ];
+
+    let paginaActual = -1;
+
+    function iniciarLibro() {
+      inicio.style.display = "none";
+      libro.style.display = "flex";
+      mostrarPagina(0);
+    }
+
+    function mostrarPagina(num) {
+      paginasContainer.innerHTML = "";
+
+      if (num >= paginas.length) {
+        libro.style.display = "none";
+        final.style.display = "block";
+        return;
+      }
+
+      const paginaDiv = document.createElement("div");
+      paginaDiv.className = "pagina";
+
+      const contenidoDiv = document.createElement("div");
+      contenidoDiv.className = "contenido";
+
+      const textoDiv = document.createElement("div");
+      textoDiv.className = "texto";
+      textoDiv.textContent = paginas[num].texto;
+
+      const img = document.createElement("img");
+      img.src = paginas[num].img;
+      img.alt = "Imagen de la página";
+
+      contenidoDiv.appendChild(textoDiv);
+      contenidoDiv.appendChild(img);
+      paginaDiv.appendChild(contenidoDiv);
+      paginasContainer.appendChild(paginaDiv);
+
+      paginaActual = num;
+    }
+
+    function siguientePagina() {
+      mostrarPagina(paginaActual + 1);
+    }
+
+    function anteriorPagina() {
+      if (paginaActual > 0) {
+        mostrarPagina(paginaActual - 1);
+      }
+    }
+
+    // Mostrar inicio al cargar
+    window.onload = () => {
+      inicio.style.display = "block";
+    };
+  </script>
+</body>
+</html>
