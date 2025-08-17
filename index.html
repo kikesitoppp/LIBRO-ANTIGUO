@@ -55,11 +55,13 @@
       display: flex;
       justify-content: space-between;
       transform: translateY(-50%);
+      pointer-events: none; /* evita bloquear clicks en la imagen */
     }
     .navegacion button {
-      background: rgba(212,175,55,0.8);
-      font-size: 2em;
-      padding: 10px 20px;
+      background: rgba(212,175,55,0.85);
+      font-size: 1.5em; /* más pequeño */
+      padding: 5px 12px; /* más compacto */
+      pointer-events: auto;
     }
     #recuerda h2 {
       font-size: 2.2em;
@@ -72,7 +74,7 @@
 
   <!-- Pantalla inicial -->
   <div id="inicio">
-    <h1>Hola gorda, hoy le vengo a contar una historia, ¿está lista?</h1>
+    <h1>Hola gorda, hoy le vengo a contar una historia, ¿está listo?</h1>
     <button onclick="iniciarLibro()">GO</button>
   </div>
 
@@ -89,6 +91,7 @@
   <div id="recuerda">
     <h2>Y recuerda que....</h2>
     <button onclick="reproducirAudio()">Reprodúceme</button>
+    <!-- Aquí pondrás tu canción -->
     <audio id="miAudio" src="cancion.mp3"></audio>
   </div>
 
